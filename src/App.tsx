@@ -165,7 +165,7 @@ function ResearchSection({ research, allItems }: { research: Record<string, numb
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<'missing' | 'partial' | 'done' | 'all'>('missing');
   const [page, setPage] = useState(1);
-  const ITEMS_PER_PAGE = 50;
+  const [itemsPerPage, setItemsPerPage] = useState(50);
 
   const counts = useMemo(() => {
     let missing = 0, partial = 0, done = 0;
@@ -203,8 +203,8 @@ function ResearchSection({ research, allItems }: { research: Record<string, numb
     return list;
   }, [allItems, research, search, filter, sortMode]);
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
-  const pageItems = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
+  const pageItems = filtered.slice((page - 1) * itemsPerPage, page * itemsPerPage);
 
   const filterBtns: { key: typeof filter; label: string; color: string }[] = [
     { key: 'missing', label: `✗ Missing (${counts.missing.toLocaleString()})`, color: '#e74c3c' },
@@ -287,6 +287,14 @@ function ResearchSection({ research, allItems }: { research: Record<string, numb
             })}
           </div>
 
+          <div className="per-page-select">
+            <label>Show:</label>
+            <select value={itemsPerPage} onChange={e => { setItemsPerPage(Number(e.target.value)); setPage(1); }}>
+              <option value={25}>25</option>
+              <option value={50}>50</option>
+              <option value={100}>100</option>
+            </select>
+          </div>
           <div className="pagination">
             <button className="page-btn" onClick={() => setPage(1)} disabled={page === 1}>««</button>
             <button className="page-btn" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>«</button>
