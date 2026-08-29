@@ -193,6 +193,15 @@
   transform: translateX(4px);
 }
 
+.research-item.missing {
+  border-left: 3px solid #e74c3c;
+}
+
+.research-item.done {
+  border-left: 3px solid #2ecc71;
+  opacity: 0.8;
+}
+
 .item-info {
   display: flex;
   align-items: center;
@@ -201,10 +210,19 @@
 }
 
 .item-id {
-  color: #aaa;
-  font-size: 0.9rem;
-  min-width: 60px;
+  color: #888;
+  font-size: 0.85rem;
+  min-width: 50px;
   font-family: monospace;
+  text-align: right;
+}
+
+.item-name {
+  color: white;
+  font-weight: 500;
+  font-size: 0.95rem;
+  min-width: 200px;
+  word-break: break-word;
 }
 
 .item-bar {
