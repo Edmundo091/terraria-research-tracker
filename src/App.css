@@ -32,7 +32,7 @@
 .stat-label { color: #aaa; font-size: 0.9rem; text-align: center; margin-top: 0.25rem; }
 
 /* === Research List === */
-.research-list { margin: 2rem 0; }
+.research-list { margin: 2rem 0 0; }
 .research-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
 .research-header h3 { margin: 0; color: white; }
 .search-row { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
@@ -87,7 +87,7 @@
 .item-count { font-size: 0.7rem; color: #3498db; font-weight: 600; text-align: center; display: block; }
 
 /* === Pagination === */
-.pagination { display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 1.5rem; padding: 1rem 0 3rem 0; flex-wrap: wrap; }
+.pagination { display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 1.5rem; padding: 1rem 0 1rem 0; flex-wrap: wrap; }
 .page-btn { padding: 0.4rem 0.8rem; background: #2a2a2a; color: white; border: 1px solid #444; border-radius: 6px; cursor: pointer; font-weight: 600; }
 .page-btn:hover:not(:disabled) { border-color: #3498db; background: #333; }
 .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
