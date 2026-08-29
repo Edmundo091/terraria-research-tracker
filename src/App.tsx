@@ -212,23 +212,25 @@ function ResearchSection({ research, allItems }: { research: Record<string, numb
             onChange={(e) => { setSearch(e.target.value); setPage(1); }}
           />
         </div>
-        <div className="filter-row">
+        <div className="filter-row" style={{ justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            {filterBtns.map(b => (
+              <button
+                key={b.key}
+                className="filter-btn"
+                onClick={() => { setFilter(b.key); setPage(1); }}
+                style={{ background: filter === b.key ? b.color : '#444', borderColor: b.color }}
+              >
+                {b.label}
+              </button>
+            ))}
+          </div>
           <select className="search-input" value={sortMode} onChange={e => setSortMode(e.target.value as typeof sortMode)} style={{ width: 'auto', padding: '0.3rem 0.6rem', fontSize: '0.85rem' }}>
             <option value="name_asc">Name Ascending</option>
             <option value="name_desc">Name Descending</option>
             <option value="id_asc">ID Ascending</option>
             <option value="id_desc">ID Descending</option>
           </select>
-          {filterBtns.map(b => (
-            <button
-              key={b.key}
-              className="filter-btn"
-              onClick={() => { setFilter(b.key); setPage(1); }}
-              style={{ background: filter === b.key ? b.color : '#444', borderColor: b.color }}
-            >
-              {b.label}
-            </button>
-          ))}
         </div>
       </div>
 
