@@ -48,6 +48,7 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 0.4rem;
   align-items: stretch;
+  justify-content: center;
 }
 @media (min-width: 1024px) { .research-items { grid-template-columns: repeat(6, 1fr); } }
 @media (min-width: 1400px) { .research-items { grid-template-columns: repeat(8, 1fr); } }
