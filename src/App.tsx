@@ -212,7 +212,7 @@ function ResearchSection({ research, allItems }: { research: Record<string, numb
             onChange={(e) => { setSearch(e.target.value); setPage(1); }}
           />
         </div>
-        <div className="filter-row" style={{ justifyContent: 'space-between' }}>
+        <div className="filter-row" style={{ justifyContent: 'space-between', width: '100%' }}>
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
             {filterBtns.map(b => (
               <button
