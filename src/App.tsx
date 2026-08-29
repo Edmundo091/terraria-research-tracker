@@ -223,10 +223,21 @@ function ResearchSection({ research, allItems }: { research: Record<string, numb
       {pageItems.length > 0 ? (
         <>
           <div className="research-items">
-            {pageItems.map((item) => (
+            {pageItems.map((item) => {
+              // URL format: terraria.wiki.gg/images/ItemName_Format.png
+              // Need to URL-encode special chars and replace spaces
+              const imageName = item.name.replace(/ /g, '_');
+              const imageUrl = `https://terraria.wiki.gg/images/${encodeURIComponent(imageName)}.png`;
+              return (
               <div key={item.id} className={`research-item ${item.status}`}>
                 <div className="item-info">
                   <span className="item-id">#{item.id}</span>
+                  <img
+                    src={imageUrl}
+                    alt={item.name}
+                    className="item-image" style={{width:48,height:48,padding:2,borderRadius:6,objectFit:"contain",background:"#333",border:"1px solid #555"}}
+                    onError={(e) => { const img = e.target as HTMLImageElement; img.style.background = "#555"; img.style.opacity = "0.5"; }}
+                  />
                   <span className="item-name">{item.name}</span>
                   <div className="item-bar">
                     <div
@@ -237,7 +248,8 @@ function ResearchSection({ research, allItems }: { research: Record<string, numb
                 </div>
                 <span className="item-count">{item.current}/{item.needed}</span>
               </div>
-            ))}
+              );
+            })}
           </div>
 
           <div className="pagination">
