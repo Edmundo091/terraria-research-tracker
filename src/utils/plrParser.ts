@@ -84,18 +84,10 @@ class BinaryReader {
   }
 
   readString(): string {
-    // 7-bit encoded length
-    let length = 0;
-    let shift = 0;
-    let b: number;
-    do {
-      b = this.readByte();
-      length |= (b & 0x7f) << shift;
-      shift += 7;
-    } while ((b & 0x80) && shift < 35);
-    
+    // Simple 1-byte length prefix (NOT 7-bit encoded)
+    if (this.offset >= this.data.length) return '';
+    const length = this.data[this.offset++];
     if (length === 0 || this.offset + length > this.data.length) return '';
-    
     const strBytes = this.readBytes(length);
     return new TextDecoder('utf-8').decode(strBytes);
   }
