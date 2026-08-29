@@ -29,7 +29,8 @@ function App() {
     }
     const totalProgress = (complete / Math.max(1, allItems.filter(i => i.needed > 0).length)) * 100;
     const totalObtainable = allItems.filter(i => i.needed > 0).length;
-    return { researched, complete, total: totalObtainable, missing: totalObtainable - complete, totalProgress };
+    const unobtainable = allItems.filter(i => i.needed === 0).length;
+    return { researched, complete, total: totalObtainable, missing: totalObtainable - complete, unobtainable, totalProgress };
   }, [allItems, research]);
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -149,12 +150,16 @@ function App() {
                   <span className="stat-label">Researched</span>
                 </div>
                 <div className="stat">
-                  <span className="stat-value">{stats.missing.toLocaleString()}</span>
+                  <span className="stat-value" style={{ color: '#e74c3c' }}>{stats.missing.toLocaleString()}</span>
                   <span className="stat-label">Missing</span>
                 </div>
                 <div className="stat">
+                  <span className="stat-value" style={{ color: '#7f8c8d' }}>{stats.unobtainable?.toLocaleString() ?? 0}</span>
+                  <span className="stat-label">Unobtainable</span>
+                </div>
+                <div className="stat">
                   <span className="stat-value">{stats.total.toLocaleString()}</span>
-                  <span className="stat-label">Total Items</span>
+                  <span className="stat-label">Total Obtainable</span>
                 </div>
               </div>
             </div>
