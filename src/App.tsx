@@ -226,8 +226,7 @@ function ResearchSection({ research, allItems }: { research: Record<string, numb
             {pageItems.map((item) => {
               // URL format: terraria.wiki.gg/images/ItemName_Format.png
               // Need to URL-encode special chars and replace spaces
-              const imageName = item.name.replace(/ /g, '_');
-              const imageUrl = `https://terraria.wiki.gg/images/${encodeURIComponent(imageName)}.png`;
+              
               return (
               <div key={item.id} className={`research-item ${item.status}`}>
                 <div className="item-info">
