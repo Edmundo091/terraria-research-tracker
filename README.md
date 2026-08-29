@@ -2,6 +2,8 @@
 
 A React + TypeScript + Vite app that decrypts and reads `.plr` files (AES-128-CBC) to show research progress against the full 6,199-item database.
 
+Inspired by [Terrasavr](https://yal.cc/) by **YellowAfterlife**.
+
 ## Features
 - Load `.plr` files (encrypted with AES-128-CBC, key/IV derived from Steam Cloud format)
 - Compare research with full item database (`items.json` with `imageUrl` and `wikiUrl`)
@@ -11,6 +13,9 @@ A React + TypeScript + Vite app that decrypts and reads `.plr` files (AES-128-CB
 - Responsive grid layout (4/6/8 columns) with status-colored borders and images from `terraria.wiki.gg`
 - Export JSON data (`?debug` shows console)
 - Console panel only visible when `?debug` is present
+
+## Credits
+- Inspired by [Terrasavr](https://yal.cc/) by **YellowAfterlife** — the `.plr` AES-128-CBC decryption logic and binary parsing approach were informed by his work.
 
 ## Decryption Details
 - AES-128-CBC using key/IV: `6800330079005f006700550079005a00`
