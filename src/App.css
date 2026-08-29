@@ -337,7 +337,7 @@
   align-items: center;
   gap: 0.5rem;
   margin-top: 1.5rem;
-  padding: 1rem 0;
+  padding: 1rem 0 3rem 0; /* Added bottom padding */
   flex-wrap: wrap;
 }
 
@@ -382,7 +382,7 @@
 }
 
 .App {
-  padding-bottom: 120px; /* Space for ConsolePanel */
+  padding-bottom: 160px; /* Space for ConsolePanel + pagination */
 }
 
 @media (max-width: 768px) {
