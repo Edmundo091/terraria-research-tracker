@@ -227,18 +227,20 @@ function ResearchSection({ research, allItems }: { research: Record<string, numb
               // URL format: terraria.wiki.gg/images/ItemName_Format.png
               // Need to URL-encode special chars and replace spaces
               
+              const wikiPageName = item.name.replace(/ /g, '_').replace(/'/g, '%27');
+              const wikiImageName = encodeURIComponent(item.name.replace(/ /g, '_'));
               return (
               <div key={item.id} className={`research-item ${item.status}`}>
                 <div className="item-info">
                   <span className="item-id">#{item.id}</span>
                   <a
                     className="item-link item-image-wrapper"
-                    href={`https://terraria.wiki.gg/wiki/${encodeURIComponent(item.name.replace(/ /g, '_'))}`}
+                    href={`https://terraria.wiki.gg/wiki/${wikiPageName}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     <img
-                      src={`https://terraria.wiki.gg/images/${encodeURIComponent(item.name.replace(/ /g, '_'))}.png`}
+                      src={`https://terraria.wiki.gg/images/${wikiImageName}.png`}
                       alt={item.name}
                       className="item-image" style={{width:48,height:48,padding:2,borderRadius:6,objectFit:"contain",background:"#333",border:"1px solid #555"}}
                       onError={(e) => { const img = e.target as HTMLImageElement; img.style.background = "#555"; img.style.opacity = "0.5"; }}
