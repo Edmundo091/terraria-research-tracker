@@ -113,8 +113,8 @@ function App() {
                   />
                   <defs>
                     <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#9b59b6" />
-                      <stop offset="100%" stopColor="#3498db" />
+                      <stop offset="0%" stopColor="#e6b85c" />
+                      <stop offset="100%" stopColor="#d95d39" />
                     </linearGradient>
                   </defs>
                 </svg>
