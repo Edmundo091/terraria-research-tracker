@@ -55,9 +55,15 @@ class BinaryReader {
   }
 
   readString(): string {
-    if (this.offset >= this.data.length) return '';
-    const length = this.data[this.offset++];
-    if (length === 0 || this.offset + length > this.data.length) return '';
+    let length = 0;
+    let shift = 0;
+    let b: number;
+    do {
+      b = this.readByte();
+      length |= (b & 0x7f) << shift;
+      shift += 7;
+    } while (b & 0x80);
+    if (this.offset + length > this.data.length) length = this.data.length - this.offset;
     const strBytes = this.readBytes(length);
     return new TextDecoder('utf-8').decode(strBytes);
   }
