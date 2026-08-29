@@ -77,16 +77,16 @@ function App() {
       <div className="file-upload-section">
         <div className="upload-box">
           <input type="file" accept=".plr" id="plr-upload" onChange={handleFileUpload} className="file-input" />
-          <label htmlFor="plr-upload" className="upload-label">
+          <label htmlFor="plr-upload" className="btn btn-primary">
             <span className="upload-icon">📁</span>
             <span>Choose .plr file</span>
           </label>
-          <button onClick={handleClear} className="clear-btn" disabled={!playerName}>
+          <button onClick={handleClear} className="btn btn-secondary" disabled={!playerName}>
             <span className="upload-icon">🗑</span>
             <span>Clear</span>
           </button>
           {playerName && (
-            <button onClick={handleExport} className="export-btn" style={{ background: '#2ecc71' }}>
+            <button onClick={handleExport} className="btn btn-success" style={{ background: '#2ecc71' }}>
               <span className="upload-icon">📤</span>
               <span>Export JSON</span>
             </button>
