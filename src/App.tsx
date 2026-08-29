@@ -251,13 +251,10 @@ function ResearchSection({ research, allItems, stats, playerName }: { research: 
           <div className="research-items">
             {pageItems.map((item) => {
               return (
-              <a
+              <div
                 key={item.id}
                 className={`research-item ${item.status}`}
-                href={item.wikiUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
+                style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', cursor: 'default' }}
               >
                 <div className="item-info">
                   <span className="item-id">#{item.id}</span>
@@ -278,7 +275,7 @@ function ResearchSection({ research, allItems, stats, playerName }: { research: 
                   </div>
                 </div>
                 <span className="item-count">{item.current}/{item.needed}</span>
-              </a>
+              </div>
               );
             })}
           </div>
