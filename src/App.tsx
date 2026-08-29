@@ -225,7 +225,7 @@ function ResearchSection({ research, allItems, stats, playerName }: { research: 
           </div>
         </div>
         <div className="filter-row" style={{ justifyContent: 'space-between', width: '100%' }}>
-          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          <div className="filter-btn-group">
             {filterBtns.map(b => (
               <button
                 key={b.key}
@@ -237,7 +237,7 @@ function ResearchSection({ research, allItems, stats, playerName }: { research: 
               </button>
             ))}
           </div>
-          <select className="search-input" value={sortMode} onChange={e => setSortMode(e.target.value as typeof sortMode)} style={{ width: 'auto', padding: '0.3rem 0.6rem', fontSize: '0.85rem' }}>
+          <select className="search-input sort-select" value={sortMode} onChange={e => setSortMode(e.target.value as typeof sortMode)}>
             <option value="name_asc">Name Ascending</option>
             <option value="name_desc">Name Descending</option>
             <option value="id_asc">ID Ascending</option>
