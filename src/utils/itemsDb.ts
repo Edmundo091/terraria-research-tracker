@@ -5,6 +5,8 @@ export interface Item {
   name: string;
   internalName: string;
   needed: number;
+  researched?: number;
+  fullyResearched?: boolean;
 }
 
 const itemsByName: Map<string, Item> = new Map();

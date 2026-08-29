@@ -45,7 +45,7 @@ function App() {
         const plrData = await parsePlrFile(arrayBuffer);
         setPlayerName(plrData.playerName);
         setResearch(plrData.research);
-        const { progressPercent } = getResearchProgress(plrData.research);
+        const { progressPercent } = getResearchProgress(plrData.research, plrData.items);
         setProgress(progressPercent);
       } catch (error: any) {
         const errorMsg = error?.message || error?.toString() || JSON.stringify(error) || 'Unknown error';
