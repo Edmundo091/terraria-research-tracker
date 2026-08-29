@@ -600,3 +600,19 @@
   color: #3498db;
   font-weight: 600;
 }
+
+.research-item {
+  width: 100% !important;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+}
+.research-item .item-info {
+  flex-wrap: wrap;
+  word-break: break-word;
+}
+.research-item .item-name {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  font-size: 0.8rem;
+}
