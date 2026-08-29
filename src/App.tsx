@@ -211,8 +211,10 @@ function ResearchSection({ research, allItems }: { research: Record<string, numb
           />
         </div>
         <div className="filter-row">
-          <button className="filter-btn" onClick={() => setSortMode('name')} style={{ borderColor: sortMode === 'name' ? '#3498db' : '#444' }}>A-Z</button>
-          <button className="filter-btn" onClick={() => setSortMode('id')} style={{ borderColor: sortMode === 'id' ? '#3498db' : '#444' }}># ID</button>
+          <select className="search-input" value={sortMode} onChange={e => setSortMode(e.target.value as 'name' | 'id')} style={{ width: 'auto', padding: '0.3rem 0.6rem', fontSize: '0.85rem' }}>
+            <option value="name">A-Z</option>
+            <option value="id"># ID</option>
+          </select>
           {filterBtns.map(b => (
             <button
               key={b.key}
