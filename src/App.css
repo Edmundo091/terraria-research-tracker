@@ -133,4 +133,5 @@
   animation: spin 0.8s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
-.per-page-select { display: flex; align-items: center; gap: 0.5rem; color: #aaa; font-size: 0.85rem; }\n.per-page-select select { background: #2a2a2a; color: white; border: 1px solid #444; border-radius: 4px; padding: 0.2rem 0.4rem; }
+.per-page-select { display: flex; align-items: center; gap: 0.5rem; color: #aaa; font-size: 0.85rem; margin-top: 0.75rem; justify-content: center; }\n.per-page-select select { background: #2a2a2a; color: white; border: 1px solid #555; border-radius: 6px; padding: 0.3rem 0.7rem; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+.per-page-select select:hover { border-color: #3498db; }
