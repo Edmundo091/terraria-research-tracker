@@ -200,11 +200,11 @@ function ResearchSection({ research, allItems, stats, playerName }: { research: 
             </div>
           </div>
           
-          <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '1rem 0' }}>
-            <div style={{ width: '100%', height: '28px', background: '#333', borderRadius: '14px', overflow: 'hidden', position: 'relative', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.4)' }}>
-              <div style={{ width: `${stats?.totalProgress ?? 0}%`, height: '100%', background: 'linear-gradient(135deg, #e6b85c, #d95d39)', borderRadius: '14px', transition: 'width 0.4s ease' }} />
+          <div className="progress-bar-container">
+            <div className="progress-bar-track">
+              <div className="progress-bar-fill" style={{ width: `${stats?.totalProgress ?? 0}%` }} />
             </div>
-            <div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '1.4rem', color: '#e6b85c', letterSpacing: '0.02em' }}>
+            <div className="progress-bar-label">
               {stats?.totalProgress?.toFixed?.(1) ?? '0.0'}%
             </div>
           </div>
