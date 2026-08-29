@@ -20,10 +20,10 @@ function App() {
   const [playerName, setPlayerName] = useState<string>('');
   const [research, setResearch] = useState<Record<string, number>>({});
   const [progress, setProgress] = useState<number>(0);
-  const [totalResearched, setTotalResearched] = useState<number>(0);
   const [fileError, setFileError] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [showAll, setShowAll] = useState<boolean>(false); // Toggle: show only researched (count > 0) or all (including 0)
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -42,9 +42,8 @@ function App() {
         setPlayerName(plrData.playerName);
         setResearch(plrData.research);
 
-        const { totalResearched: total, progressPercent } = getResearchProgress(plrData.research);
+        const { progressPercent } = getResearchProgress(plrData.research);
         setProgress(progressPercent);
-        setTotalResearched(total);
       } catch (error: any) {
         const errorMsg = error?.message || error?.toString() || JSON.stringify(error) || 'Unknown error';
         setFileError('Failed to parse .plr file: ' + errorMsg);
@@ -75,7 +74,6 @@ function App() {
     setPlayerName('');
     setResearch({});
     setProgress(0);
-    setTotalResearched(0);
     setFileError('');
     setSearchQuery('');
     setCurrentPage(1);
@@ -84,16 +82,26 @@ function App() {
   // Filter valid items and sort
   const validResearch = useMemo(() => {
     return Object.entries(research)
-      .filter(([name, count]) => isValidItemName(name) && count > 0)
+      .filter(([name, _count]) => isValidItemName(name))
       .sort((a, b) => b[1] - a[1]); // Sort by count descending
   }, [research]);
+  
+  const researchedCount = validResearch.filter(([, c]) => c > 0).length;
+  const totalCount = validResearch.length;
+  const notResearchedCount = totalCount - researchedCount;
 
   // Search filter
   const filteredResearch = useMemo(() => {
-    if (!searchQuery.trim()) return validResearch;
-    const q = searchQuery.toLowerCase();
-    return validResearch.filter(([name]) => name.toLowerCase().includes(q));
-  }, [validResearch, searchQuery]);
+    let items: [string, number][] = validResearch;
+    if (!showAll) {
+      items = items.filter(([, count]) => count > 0);
+    }
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      items = items.filter(([name]) => name.toLowerCase().includes(q));
+    }
+    return items;
+  }, [validResearch, searchQuery, showAll]);
 
   const totalPages = Math.max(1, Math.ceil(filteredResearch.length / ITEMS_PER_PAGE));
   const paginatedItems = filteredResearch.slice(
@@ -183,12 +191,16 @@ function App() {
               </div>
               <div className="progress-stats">
                 <div className="stat">
-                  <span className="stat-value">{totalResearched.toLocaleString()}</span>
-                  <span className="stat-label">Total Researched</span>
+                  <span className="stat-value">{researchedCount.toLocaleString()}</span>
+                  <span className="stat-label">Researched</span>
                 </div>
                 <div className="stat">
-                  <span className="stat-value">{validResearch.length.toLocaleString()}</span>
-                  <span className="stat-label">Unique Items</span>
+                  <span className="stat-value">{totalCount.toLocaleString()}</span>
+                  <span className="stat-label">Total Items</span>
+                </div>
+                <div className="stat">
+                  <span className="stat-value">{notResearchedCount.toLocaleString()}</span>
+                  <span className="stat-label">Not Researched</span>
                 </div>
               </div>
             </div>
@@ -197,13 +209,22 @@ function App() {
           <div className="research-list">
             <div className="research-header">
               <h3>Research Items</h3>
-              <input
-                type="text"
-                className="search-input"
-                placeholder="Search items..."
-                value={searchQuery}
-                onChange={(e) => handleSearch(e.target.value)}
-              />
+              <div className="search-row">
+                <input
+                  type="text"
+                  className="search-input"
+                  placeholder="Search items..."
+                  value={searchQuery}
+                  onChange={(e) => handleSearch(e.target.value)}
+                />
+                <button
+                  className="toggle-btn"
+                  onClick={() => { setShowAll(!showAll); setCurrentPage(1); }}
+                  style={{ background: showAll ? '#2ecc71' : '#444', marginLeft: '0.5rem' }}
+                >
+                  {showAll ? 'Show Only Researched' : 'Show All (incl. 0)'}
+                </button>
+              </div>
             </div>
 
             {filteredResearch.length > 0 ? (
