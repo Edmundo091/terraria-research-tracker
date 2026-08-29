@@ -141,7 +141,7 @@ function App() {
           <ResearchSection research={research} allItems={allItems} />
         </div>
       )}
-      <ConsolePanel />
+      {window.location.search.includes('debug') && <ConsolePanel />}
     </div>
   );
 }
