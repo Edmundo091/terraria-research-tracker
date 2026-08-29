@@ -10,6 +10,7 @@ function App() {
   const [research, setResearch] = useState<Record<string, number>>({});
   const [_, setProgress] = useState<number>(0); // kept for potential future
   const [fileError, setFileError] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const allItems = useMemo(() => getAllItems(), []);
 
@@ -31,6 +32,7 @@ function App() {
     const file = event.target.files?.[0];
     if (!file) return;
     setFileError('');
+    setIsLoading(true);
     const reader = new FileReader();
     reader.onload = async (e) => {
       try {
@@ -44,6 +46,8 @@ function App() {
         const errorMsg = error?.message || error?.toString() || JSON.stringify(error) || 'Unknown error';
         setFileError('Failed to parse .plr file: ' + errorMsg);
         console.error('Error parsing .plr file:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
     reader.readAsArrayBuffer(file);
@@ -144,6 +148,12 @@ function App() {
           </div>
 
           <ResearchSection research={research} allItems={allItems} />
+        </div>
+      )}
+      {isLoading && (
+        <div className="loading-overlay">
+          <div className="spinner" />
+          <p>Decrypting and parsing .plr file...</p>
         </div>
       )}
       {window.location.search.includes('debug') && <ConsolePanel />}
