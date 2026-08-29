@@ -151,22 +151,6 @@ function App() {
                   <span className="stat-value" style={{ color: '#2ecc71' }}>{stats.complete.toLocaleString()}</span>
                   <span className="stat-label">Researched</span>
                 </div>
-                <div className="stat">
-                  <span className="stat-value" style={{ color: '#e74c3c' }}>{stats.missing.toLocaleString()}</span>
-                  <span className="stat-label">Missing</span>
-                </div>
-                <div className="stat">
-                  <span className="stat-value" style={{ color: '#f39c12' }}>{stats.partial.toLocaleString()}</span>
-                  <span className="stat-label">Partial</span>
-                </div>
-                <div className="stat">
-                  <span className="stat-value" style={{ color: '#7f8c8d' }}>{stats.unobtainable.toLocaleString()}</span>
-                  <span className="stat-label">Unobtainable</span>
-                </div>
-                <div className="stat">
-                  <span className="stat-value">{stats.total.toLocaleString()}</span>
-                  <span className="stat-label">Total Obtainable</span>
-                </div>
               </div>
             </div>
           </div>
