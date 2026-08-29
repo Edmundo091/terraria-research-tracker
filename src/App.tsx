@@ -164,7 +164,7 @@ function ResearchSection({ research, allItems }: { research: Record<string, numb
     return { missing, partial, done, all: allItems.length };
   }, [allItems, research]);
 
-  const [sortMode, setSortMode] = useState<'name' | 'id'>('name');
+  const [sortMode, setSortMode] = useState<'name_asc' | 'name_desc' | 'id_asc' | 'id_desc'>('name_asc');
 
   const filtered = useMemo(() => {
     let list = allItems.map(item => {
@@ -182,7 +182,9 @@ function ResearchSection({ research, allItems }: { research: Record<string, numb
         String(item.id).includes(q)
       );
     }
-    if (sortMode === 'id') list.sort((a, b) => a.id - b.id);
+    if (sortMode === 'id_asc') list.sort((a, b) => a.id - b.id);
+    else if (sortMode === 'id_desc') list.sort((a, b) => b.id - a.id);
+    else if (sortMode === 'name_desc') list.sort((a, b) => b.name.localeCompare(a.name));
     else list.sort((a, b) => a.name.localeCompare(b.name));
     return list;
   }, [allItems, research, search, filter, sortMode]);
@@ -211,9 +213,11 @@ function ResearchSection({ research, allItems }: { research: Record<string, numb
           />
         </div>
         <div className="filter-row">
-          <select className="search-input" value={sortMode} onChange={e => setSortMode(e.target.value as 'name' | 'id')} style={{ width: 'auto', padding: '0.3rem 0.6rem', fontSize: '0.85rem' }}>
-            <option value="name">A-Z</option>
-            <option value="id"># ID</option>
+          <select className="search-input" value={sortMode} onChange={e => setSortMode(e.target.value as typeof sortMode)} style={{ width: 'auto', padding: '0.3rem 0.6rem', fontSize: '0.85rem' }}>
+            <option value="name_asc">A → Z</option>
+            <option value="name_desc">Z → A</option>
+            <option value="id_asc"># 1 → 9</option>
+            <option value="id_desc"># 9 → 1</option>
           </select>
           {filterBtns.map(b => (
             <button
