@@ -74,6 +74,12 @@ function App() {
 
   return (
     <div className={`App ${isDebug ? 'debug-mode' : ''}`}>
+      {isLoading && (
+        <div className="loading-overlay">
+          <div className="spinner" />
+          <p>Decrypting and parsing .plr file...</p>
+        </div>
+      )}
       <header className="app-header">
         <h1>Terraria Research Tracker</h1>
         <p className="subtitle">Track your Journey's End research progress</p>
@@ -149,12 +155,6 @@ function App() {
           </div>
 
           <ResearchSection research={research} allItems={allItems} />
-        </div>
-      )}
-      {isLoading && (
-        <div className="loading-overlay">
-          <div className="spinner" />
-          <p>Decrypting and parsing .plr file...</p>
         </div>
       )}
       {window.location.search.includes('debug') && <ConsolePanel />}
