@@ -21,13 +21,15 @@ function App() {
     let complete = 0;
     let totalNeeded = 0;
     for (const item of allItems) {
+      if (item.needed === 0) continue; // unobtainable - excluded from stats
       const current = research[item.internalName] ?? 0;
       if (current > 0) researched++;
       totalNeeded += item.needed;
       if (current >= item.needed) complete++;
     }
-    const totalProgress = (complete / allItems.length) * 100;
-    return { researched, complete, total: allItems.length, missing: allItems.length - complete, totalProgress };
+    const totalProgress = (complete / Math.max(1, allItems.filter(i => i.needed > 0).length)) * 100;
+    const totalObtainable = allItems.filter(i => i.needed > 0).length;
+    return { researched, complete, total: totalObtainable, missing: totalObtainable - complete, totalProgress };
   }, [allItems, research]);
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -168,32 +170,36 @@ function App() {
 
 function ResearchSection({ research, allItems }: { research: Record<string, number>; allItems: any[] }) {
   const [search, setSearch] = useState('');
-  const [filter, setFilter] = useState<'missing' | 'partial' | 'done' | 'all'>('missing');
+  const [filter, setFilter] = useState<'missing' | 'partial' | 'done' | 'unobtainable' | 'all'>('missing');
   const [page, setPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(50);
 
   const counts = useMemo(() => {
-    let missing = 0, partial = 0, done = 0;
+    let missing = 0, partial = 0, done = 0, unobtainable = 0;
     for (const item of allItems) {
-      if (item.needed === 0) continue; // unobtainable
+      if (item.needed === 0) { unobtainable++; continue; }
       const current = research[item.internalName] ?? 0;
       if (current >= item.needed) done++;
       else if (current > 0) partial++;
       else missing++;
     }
-    return { missing, partial, done, all: allItems.length };
+    return { missing, partial, done, unobtainable, all: allItems.length };
   }, [allItems, research]);
 
   const [sortMode, setSortMode] = useState<'name_asc' | 'name_desc' | 'id_asc' | 'id_desc'>('name_asc');
 
   const filtered = useMemo(() => {
     let list = allItems.map(item => {
-      if (item.needed === 0) return null; // unobtainable
+      if (item.needed === 0) {
+        return { ...item, current: 0, status: 'unobtainable' as const };
+      }
       const current = research[item.internalName] ?? 0;
       return { ...item, current, status: current >= item.needed ? 'done' : current > 0 ? 'partial' : 'missing' };
     }).filter(Boolean);
-    if (filter !== 'all') {
+    if (filter !== 'all' && filter !== 'unobtainable') {
       list = list.filter(item => item.status === filter);
+    } else if (filter === 'unobtainable') {
+      list = list.filter(item => item.status === 'unobtainable');
     }
     if (search.trim()) {
       const q = search.toLowerCase();
@@ -217,6 +223,7 @@ function ResearchSection({ research, allItems }: { research: Record<string, numb
     { key: 'missing', label: `✗ Missing (${counts.missing.toLocaleString()})`, color: '#e74c3c' },
     { key: 'partial', label: `◐ Partial (${counts.partial.toLocaleString()})`, color: '#f39c12' },
     { key: 'done', label: `✓ Done (${counts.done.toLocaleString()})`, color: '#2ecc71' },
+    { key: 'unobtainable', label: `⊘ Unobtainable (${counts.unobtainable.toLocaleString()})`, color: '#7f8c8d' },
     { key: 'all', label: `All (${counts.all.toLocaleString()})`, color: '#3498db' }
   ];
 
