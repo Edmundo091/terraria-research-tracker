@@ -1,27 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { parsePlrFile, getResearchProgress } from './utils/plrParser';
 import ConsolePanel from './components/ConsolePanel';
 import './App.css';
 
-interface ResearchItem {
-  id: number;
-  name: string;
-  count: number;
-  max: number;
+const ITEMS_PER_PAGE = 50;
+
+function isValidItemName(name: string): boolean {
+  // Must be printable ASCII, reasonable length, no control chars
+  if (!name || name.length === 0 || name.length > 60) return false;
+  for (let i = 0; i < name.length; i++) {
+    const c = name.charCodeAt(i);
+    if (c < 32 || c > 126) return false;
+  }
+  // Must have at least one letter
+  return /[a-zA-Z]/.test(name);
 }
 
 function App() {
   const [playerName, setPlayerName] = useState<string>('');
-  const [research, setResearch] = useState<Record<number, number>>({});
+  const [research, setResearch] = useState<Record<string, number>>({});
   const [progress, setProgress] = useState<number>(0);
   const [totalResearched, setTotalResearched] = useState<number>(0);
   const [fileError, setFileError] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
     setFileError('');
+    setSearchQuery('');
+    setCurrentPage(1);
 
     const reader = new FileReader();
     reader.onload = async (e) => {
@@ -45,7 +55,6 @@ function App() {
   };
 
   const handleExport = () => {
-    // Save data to localStorage so it can be exported
     const exportData = {
       playerName,
       research,
@@ -68,23 +77,39 @@ function App() {
     setProgress(0);
     setTotalResearched(0);
     setFileError('');
+    setSearchQuery('');
+    setCurrentPage(1);
   };
 
-  const sortedResearch: ResearchItem[] = Object.entries(research)
-    .map(([id, count]) => ({
-      id: parseInt(id, 10),
-      name: `Item ${id}`,
-      count: count,
-      max: 100,
-    }))
-    .sort((a, b) => b.count - a.count);
+  // Filter valid items and sort
+  const validResearch = useMemo(() => {
+    return Object.entries(research)
+      .filter(([name, count]) => isValidItemName(name) && count > 0)
+      .sort((a, b) => b[1] - a[1]); // Sort by count descending
+  }, [research]);
 
-  const researchItems = sortedResearch.slice(0, 20); // Show top 20 items
+  // Search filter
+  const filteredResearch = useMemo(() => {
+    if (!searchQuery.trim()) return validResearch;
+    const q = searchQuery.toLowerCase();
+    return validResearch.filter(([name]) => name.toLowerCase().includes(q));
+  }, [validResearch, searchQuery]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredResearch.length / ITEMS_PER_PAGE));
+  const paginatedItems = filteredResearch.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    setCurrentPage(1);
+  };
 
   return (
     <div className="App">
       <header className="app-header">
-        <h1> Terraria Research Tracker </h1>
+        <h1>Terraria Research Tracker</h1>
         <p className="subtitle">Track your Journey's End research progress</p>
       </header>
 
@@ -110,7 +135,6 @@ function App() {
             </button>
           )}
         </div>
-
         {fileError && <div className="error-message">{fileError}</div>}
       </div>
 
@@ -159,11 +183,11 @@ function App() {
               </div>
               <div className="progress-stats">
                 <div className="stat">
-                  <span className="stat-value">{totalResearched}</span>
-                  <span className="stat-label">Items Researched</span>
+                  <span className="stat-value">{totalResearched.toLocaleString()}</span>
+                  <span className="stat-label">Total Researched</span>
                 </div>
                 <div className="stat">
-                  <span className="stat-value">{Object.keys(research).length}</span>
+                  <span className="stat-value">{validResearch.length.toLocaleString()}</span>
                   <span className="stat-label">Unique Items</span>
                 </div>
               </div>
@@ -171,26 +195,77 @@ function App() {
           </div>
 
           <div className="research-list">
-            <h3>Most Researched Items</h3>
-            {researchItems.length > 0 ? (
-              <div className="research-items">
-                {researchItems.map((item) => (
-                  <div key={item.id} className="research-item">
-                    <div className="item-info">
-                      <span className="item-id">ID: {item.id}</span>
-                      <div className="item-bar">
-                        <div
-                          className="item-bar-fill"
-                          style={{ width: `${(item.count / item.max) * 100}%` }}
-                        />
+            <div className="research-header">
+              <h3>Research Items</h3>
+              <input
+                type="text"
+                className="search-input"
+                placeholder="Search items..."
+                value={searchQuery}
+                onChange={(e) => handleSearch(e.target.value)}
+              />
+            </div>
+
+            {filteredResearch.length > 0 ? (
+              <>
+                <div className="research-items">
+                  {paginatedItems.map(([name, count]) => (
+                    <div key={name} className="research-item">
+                      <div className="item-info">
+                        <span className="item-name">{name}</span>
+                        <div className="item-bar">
+                          <div
+                            className="item-bar-fill"
+                            style={{ width: `${Math.min((count / 100) * 100, 100)}%` }}
+                          />
+                        </div>
                       </div>
+                      <span className="item-count">{count}/100</span>
                     </div>
-                    <span className="item-count">{item.count}/{item.max}</span>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+
+                <div className="pagination">
+                  <button
+                    className="page-btn"
+                    onClick={() => setCurrentPage(1)}
+                    disabled={currentPage === 1}
+                  >
+                    ««
+                  </button>
+                  <button
+                    className="page-btn"
+                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                  >
+                    «
+                  </button>
+                  <span className="page-info">
+                    Page {currentPage} of {totalPages}
+                    <span className="page-count">
+                      ({filteredResearch.length.toLocaleString()} items)
+                    </span>
+                  </span>
+                  <button
+                    className="page-btn"
+                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                    disabled={currentPage === totalPages}
+                  >
+                    »
+                  </button>
+                  <button
+                    className="page-btn"
+                    onClick={() => setCurrentPage(totalPages)}
+                    disabled={currentPage === totalPages}
+                  >
+                    »»
+                  </button>
+                </div>
+              </>
             ) : (
-              <p className="no-data">No research data found in this file.</p>
+              <p className="no-data">
+                {searchQuery ? 'No items match your search.' : 'No research data found in this file.'}
+              </p>
             )}
           </div>
         </div>

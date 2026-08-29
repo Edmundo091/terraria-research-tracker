@@ -408,7 +408,7 @@ function parsePlayerData(reader: BinaryReader, version: number): { playerName: s
       try {
         const itemName = reader.readString();
         const amount = reader.readInt32();
-        if (itemName) {
+        if (itemName && isValidTerrariaItemName(itemName) && amount >= 0 && amount <= 100) {
           research[itemName] = amount;
           if (i < 10 || i >= researchedItems - 3) {
             console.log(`Research ${i}: ${itemName} = ${amount}`);
@@ -478,4 +478,13 @@ export function getResearchProgress(research: Record<string, number>): {
     totalResearched,
     progressPercent: Math.min(progressPercent, 100)
   };
+}
+
+function isValidTerrariaItemName(name: string): boolean {
+  if (!name || name.length === 0 || name.length > 60) return false;
+  for (let i = 0; i < name.length; i++) {
+    const c = name.charCodeAt(i);
+    if (c < 32 || c > 126) return false;
+  }
+  return /[a-zA-Z0-9]/.test(name);
 }
