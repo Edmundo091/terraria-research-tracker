@@ -81,10 +81,14 @@ function App() {
             <span className="upload-icon">📁</span>
             <span>Choose .plr file</span>
           </label>
-          <button onClick={handleClear} className="clear-btn" disabled={!playerName}>Clear</button>
+          <button onClick={handleClear} className="clear-btn" disabled={!playerName}>
+            <span className="upload-icon">🗑</span>
+            <span>Clear</span>
+          </button>
           {playerName && (
-            <button onClick={handleExport} className="export-btn" style={{ marginLeft: '10px', background: '#2ecc71' }}>
-              Export JSON
+            <button onClick={handleExport} className="export-btn" style={{ background: '#2ecc71' }}>
+              <span className="upload-icon">📤</span>
+              <span>Export JSON</span>
             </button>
           )}
         </div>

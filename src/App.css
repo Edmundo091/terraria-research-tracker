@@ -12,11 +12,10 @@
 .upload-label { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #e6b85c, #d95d39); color: white; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; }
 .upload-label:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(155, 89, 182, 0.3); }
 .upload-icon { font-size: 1.3rem; }
-.clear-btn { padding: 0.75rem 1.5rem; background: #444; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; }
-.clear-btn::before { content: '🗑 '; }
+.clear-btn { padding: 0.75rem 1.5rem; background: #444; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.5rem; }
 .clear-btn:hover:not(:disabled) { background: #555; }
 .clear-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.export-btn { padding: 0.75rem 1.5rem; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+.export-btn { padding: 0.75rem 1.5rem; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.5rem; }
 .error-message { background: #e74c3c; color: white; padding: 1rem; border-radius: 6px; margin: 1rem 0; text-align: center; }
 
 /* === Player & Progress === */
