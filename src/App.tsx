@@ -117,45 +117,7 @@ function App() {
 
       {playerName && (
         <div className="results-section">
-          <div className="player-info">
-            <h2>Player: {playerName}</h2>
-          </div>
-
-          <div className="progress-overview">
-            <div className="progress-card">
-              <div className="progress-circle">
-                <svg className="progress-ring" viewBox="0 0 120 120">
-                  <circle className="progress-ring-bg" cx="60" cy="60" r="54" fill="none" stroke="#333" strokeWidth="8" />
-                  <circle
-                    className="progress-ring-fg"
-                    cx="60" cy="60" r="54" fill="none"
-                    stroke="url(#gradient)" strokeWidth="8"
-                    strokeDasharray="339.292"
-                    strokeDashoffset={339.292 * (1 - stats.totalProgress / 100)}
-                    strokeLinecap="round"
-                    transform="rotate(-90 60 60)"
-                  />
-                  <defs>
-                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#e6b85c" />
-                      <stop offset="100%" stopColor="#d95d39" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-                <div className="progress-text">
-                  <span className="progress-percent">{stats.totalProgress.toFixed(1)}%</span>
-                </div>
-              </div>
-              <div className="progress-stats">
-                <div className="stat">
-                  <span className="stat-value" style={{ color: '#2ecc71' }}>{stats.complete.toLocaleString()}</span>
-                  <span className="stat-label">Researched</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <ResearchSection research={research} allItems={allItems} />
+          <ResearchSection research={research} allItems={allItems} stats={stats} playerName={playerName} />
         </div>
       )}
       {window.location.search.includes('debug') && <ConsolePanel />}
@@ -163,7 +125,7 @@ function App() {
   );
 }
 
-function ResearchSection({ research, allItems }: { research: Record<string, number>; allItems: any[] }) {
+function ResearchSection({ research, allItems, stats, playerName }: { research: Record<string, number>; allItems: any[]; stats?: any; playerName?: string }) {
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<'missing' | 'partial' | 'done' | 'unobtainable' | 'all'>('missing');
   const [page, setPage] = useState(1);
@@ -224,6 +186,31 @@ function ResearchSection({ research, allItems }: { research: Record<string, numb
 
   return (
     <div className="research-list">
+      <div className="progress-overview">
+        <div className="progress-card">
+          <div style={{display: "flex", flexDirection: "column"}}>
+            <div className="player-info">
+              <h2>Player: {playerName}</h2>
+            </div>
+            <div className="progress-stats">
+              <div className="stat">
+                <span className="stat-value">{stats.complete.toLocaleString()}</span>
+                <span className="stat-label">Researched</span>
+              </div>
+            </div>
+          </div>
+          
+          <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '1rem 0' }}>
+            <div style={{ width: '100%', height: '28px', background: '#333', borderRadius: '14px', overflow: 'hidden', position: 'relative', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.4)' }}>
+              <div style={{ width: `${stats?.totalProgress ?? 0}%`, height: '100%', background: 'linear-gradient(135deg, #e6b85c, #d95d39)', borderRadius: '14px', transition: 'width 0.4s ease' }} />
+            </div>
+            <div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '1.4rem', color: '#e6b85c', letterSpacing: '0.02em' }}>
+              {stats?.totalProgress?.toFixed?.(1) ?? '0.0'}%
+            </div>
+          </div>
+          
+        </div>
+      </div>
       <div className="research-header">
         <div className="research-header-row">
           <h3>Research Items</h3>
