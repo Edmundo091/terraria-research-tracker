@@ -214,10 +214,10 @@ function ResearchSection({ research, allItems }: { research: Record<string, numb
         </div>
         <div className="filter-row">
           <select className="search-input" value={sortMode} onChange={e => setSortMode(e.target.value as typeof sortMode)} style={{ width: 'auto', padding: '0.3rem 0.6rem', fontSize: '0.85rem' }}>
-            <option value="name_asc">A → Z</option>
-            <option value="name_desc">Z → A</option>
-            <option value="id_asc"># 1 → 9</option>
-            <option value="id_desc"># 9 → 1</option>
+            <option value="name_asc">Name Ascending</option>
+            <option value="name_desc">Name Descending</option>
+            <option value="id_asc">ID Ascending</option>
+            <option value="id_desc">ID Descending</option>
           </select>
           {filterBtns.map(b => (
             <button
