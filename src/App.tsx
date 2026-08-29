@@ -5,6 +5,7 @@ import ConsolePanel from './components/ConsolePanel';
 import './App.css';
 
 function App() {
+  const isDebug = window.location.search.includes('debug');
   const [playerName, setPlayerName] = useState<string>('');
   const [research, setResearch] = useState<Record<string, number>>({});
   const [_, setProgress] = useState<number>(0); // kept for potential future
@@ -67,7 +68,7 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div className={`App ${isDebug ? 'debug-mode' : ''}`}>
       <header className="app-header">
         <h1>Terraria Research Tracker</h1>
         <p className="subtitle">Track your Journey's End research progress</p>
