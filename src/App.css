@@ -7,7 +7,7 @@
 
 /* === Upload === */
 .file-upload-section { margin: 2rem 0; }
-.upload-box { display: flex; gap: 1rem; align-items: center; justify-content: center; margin: 1.5rem 0; }
+.upload-box { display: flex; gap: 1rem; align-items: stretch; justify-content: center; margin: 1.5rem 0; }
 .file-input { display: none; }
 .upload-label { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #e6b85c, #d95d39); color: white; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; }
 .upload-label:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(155, 89, 182, 0.3); }
