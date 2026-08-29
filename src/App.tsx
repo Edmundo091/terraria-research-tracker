@@ -175,6 +175,7 @@ function ResearchSection({ research, allItems }: { research: Record<string, numb
   const counts = useMemo(() => {
     let missing = 0, partial = 0, done = 0;
     for (const item of allItems) {
+      if (item.needed === 0) continue; // unobtainable
       const current = research[item.internalName] ?? 0;
       if (current >= item.needed) done++;
       else if (current > 0) partial++;
@@ -187,9 +188,10 @@ function ResearchSection({ research, allItems }: { research: Record<string, numb
 
   const filtered = useMemo(() => {
     let list = allItems.map(item => {
+      if (item.needed === 0) return null; // unobtainable
       const current = research[item.internalName] ?? 0;
       return { ...item, current, status: current >= item.needed ? 'done' : current > 0 ? 'partial' : 'missing' };
-    });
+    }).filter(Boolean);
     if (filter !== 'all') {
       list = list.filter(item => item.status === filter);
     }
