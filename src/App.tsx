@@ -19,18 +19,20 @@ function App() {
   const stats = useMemo(() => {
     let researched = 0;
     let complete = 0;
-    let totalNeeded = 0;
+    let partial = 0;
+    let missing = 0;
     for (const item of allItems) {
-      if (item.needed === 0) continue; // unobtainable - excluded from stats
+      if (item.needed === 0) continue; // unobtainable
       const current = research[item.internalName] ?? 0;
       if (current > 0) researched++;
-      totalNeeded += item.needed;
       if (current >= item.needed) complete++;
+      else if (current > 0) partial++;
+      else missing++;
     }
-    const totalProgress = (complete / Math.max(1, allItems.filter(i => i.needed > 0).length)) * 100;
     const totalObtainable = allItems.filter(i => i.needed > 0).length;
     const unobtainable = allItems.filter(i => i.needed === 0).length;
-    return { researched, complete, total: totalObtainable, missing: totalObtainable - complete, unobtainable, totalProgress };
+    const totalProgress = (complete / Math.max(1, totalObtainable)) * 100;
+    return { researched, complete, partial, missing, total: totalObtainable, unobtainable, totalProgress };
   }, [allItems, research]);
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -146,7 +148,7 @@ function App() {
               </div>
               <div className="progress-stats">
                 <div className="stat">
-                  <span className="stat-value">{stats.complete.toLocaleString()}</span>
+                  <span className="stat-value" style={{ color: '#2ecc71' }}>{stats.complete.toLocaleString()}</span>
                   <span className="stat-label">Researched</span>
                 </div>
                 <div className="stat">
@@ -154,7 +156,11 @@ function App() {
                   <span className="stat-label">Missing</span>
                 </div>
                 <div className="stat">
-                  <span className="stat-value" style={{ color: '#7f8c8d' }}>{stats.unobtainable?.toLocaleString() ?? 0}</span>
+                  <span className="stat-value" style={{ color: '#f39c12' }}>{stats.partial.toLocaleString()}</span>
+                  <span className="stat-label">Partial</span>
+                </div>
+                <div className="stat">
+                  <span className="stat-value" style={{ color: '#7f8c8d' }}>{stats.unobtainable.toLocaleString()}</span>
                   <span className="stat-label">Unobtainable</span>
                 </div>
                 <div className="stat">
