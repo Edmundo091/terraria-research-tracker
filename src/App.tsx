@@ -164,6 +164,8 @@ function ResearchSection({ research, allItems }: { research: Record<string, numb
     return { missing, partial, done, all: allItems.length };
   }, [allItems, research]);
 
+  const [sortMode, setSortMode] = useState<'name' | 'id'>('name');
+
   const filtered = useMemo(() => {
     let list = allItems.map(item => {
       const current = research[item.internalName] ?? 0;
@@ -180,9 +182,10 @@ function ResearchSection({ research, allItems }: { research: Record<string, numb
         String(item.id).includes(q)
       );
     }
-    list.sort((a, b) => a.name.localeCompare(b.name));
+    if (sortMode === 'id') list.sort((a, b) => a.id - b.id);
+    else list.sort((a, b) => a.name.localeCompare(b.name));
     return list;
-  }, [allItems, research, search, filter]);
+  }, [allItems, research, search, filter, sortMode]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
   const pageItems = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
@@ -208,6 +211,8 @@ function ResearchSection({ research, allItems }: { research: Record<string, numb
           />
         </div>
         <div className="filter-row">
+          <button className="filter-btn" onClick={() => setSortMode('name')} style={{ borderColor: sortMode === 'name' ? '#3498db' : '#444' }}>A-Z</button>
+          <button className="filter-btn" onClick={() => setSortMode('id')} style={{ borderColor: sortMode === 'id' ? '#3498db' : '#444' }}># ID</button>
           {filterBtns.map(b => (
             <button
               key={b.key}
