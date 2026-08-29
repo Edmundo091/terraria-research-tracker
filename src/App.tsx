@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { flushSync } from 'react-dom';
 import { parsePlrFile, getResearchProgress } from './utils/plrParser';
 import { getAllItems } from './utils/itemsDb';
 import ConsolePanel from './components/ConsolePanel';
@@ -30,7 +31,7 @@ function App() {
   }, [allItems, research]);
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIsLoading(true);
+    flushSync(() => setIsLoading(true));
     const file = event.target.files?.[0];
     if (!file) {
       setIsLoading(false);
