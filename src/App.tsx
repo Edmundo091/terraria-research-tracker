@@ -202,15 +202,17 @@ function ResearchSection({ research, allItems }: { research: Record<string, numb
   return (
     <div className="research-list">
       <div className="research-header">
-        <h3>Research Items</h3>
-        <div className="search-row">
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search name, internal, or #id..."
-            value={search}
-            onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-          />
+        <div className="research-header-row">
+          <h3>Research Items</h3>
+          <div className="search-row">
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search name, internal, or #id..."
+              value={search}
+              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+            />
+          </div>
         </div>
         <div className="filter-row" style={{ justifyContent: 'space-between', width: '100%' }}>
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
