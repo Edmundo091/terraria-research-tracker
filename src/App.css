@@ -197,9 +197,36 @@
   border-left: 3px solid #e74c3c;
 }
 
+.research-item.partial {
+  border-left: 3px solid #f39c12;
+  background: #2a2a1a;
+}
+
 .research-item.done {
   border-left: 3px solid #2ecc71;
-  opacity: 0.8;
+  opacity: 0.7;
+}
+
+.filter-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.filter-btn {
+  padding: 0.4rem 0.8rem;
+  color: white;
+  border: 2px solid;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+.filter-btn:hover {
+  opacity: 0.85;
 }
 
 .item-info {

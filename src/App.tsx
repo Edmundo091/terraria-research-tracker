@@ -148,19 +148,29 @@ function App() {
 
 function ResearchSection({ research, allItems }: { research: Record<string, number>; allItems: any[] }) {
   const [search, setSearch] = useState('');
-  const [showDone, setShowDone] = useState(false); // true = show researched, false = show missing
+  const [filter, setFilter] = useState<'missing' | 'partial' | 'done' | 'all'>('missing');
   const [page, setPage] = useState(1);
   const ITEMS_PER_PAGE = 50;
 
+  const counts = useMemo(() => {
+    let missing = 0, partial = 0, done = 0;
+    for (const item of allItems) {
+      const current = research[item.internalName] ?? 0;
+      if (current >= item.needed) done++;
+      else if (current > 0) partial++;
+      else missing++;
+    }
+    return { missing, partial, done, all: allItems.length };
+  }, [allItems, research]);
+
   const filtered = useMemo(() => {
-    let list = allItems.map(item => ({
-      ...item,
-      current: research[item.internalName] ?? 0,
-      done: (research[item.internalName] ?? 0) >= item.needed
-    }));
-    // Filter: missing first (default), or researched
-    list = list.filter(item => showDone ? item.done : !item.done);
-    // Search
+    let list = allItems.map(item => {
+      const current = research[item.internalName] ?? 0;
+      return { ...item, current, status: current >= item.needed ? 'done' : current > 0 ? 'partial' : 'missing' };
+    });
+    if (filter !== 'all') {
+      list = list.filter(item => item.status === filter);
+    }
     if (search.trim()) {
       const q = search.toLowerCase();
       list = list.filter(item =>
@@ -169,18 +179,24 @@ function ResearchSection({ research, allItems }: { research: Record<string, numb
         String(item.id).includes(q)
       );
     }
-    // Sort: alphabetical by display name
     list.sort((a, b) => a.name.localeCompare(b.name));
     return list;
-  }, [allItems, research, search, showDone]);
+  }, [allItems, research, search, filter]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
   const pageItems = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
 
+  const filterBtns: { key: typeof filter; label: string; color: string }[] = [
+    { key: 'missing', label: `✗ Missing (${counts.missing.toLocaleString()})`, color: '#e74c3c' },
+    { key: 'partial', label: `◐ Partial (${counts.partial.toLocaleString()})`, color: '#f39c12' },
+    { key: 'done', label: `✓ Done (${counts.done.toLocaleString()})`, color: '#2ecc71' },
+    { key: 'all', label: `All (${counts.all.toLocaleString()})`, color: '#3498db' }
+  ];
+
   return (
     <div className="research-list">
       <div className="research-header">
-        <h3>{showDone ? 'Researched Items' : 'Missing Items'} ({filtered.length.toLocaleString()})</h3>
+        <h3>Research Items</h3>
         <div className="search-row">
           <input
             type="text"
@@ -189,13 +205,18 @@ function ResearchSection({ research, allItems }: { research: Record<string, numb
             value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(1); }}
           />
-          <button
-            className="toggle-btn"
-            onClick={() => { setShowDone(!showDone); setPage(1); }}
-            style={{ background: showDone ? '#2ecc71' : '#e74c3c' }}
-          >
-            {showDone ? 'Switch to Missing' : 'Switch to Researched'}
-          </button>
+        </div>
+        <div className="filter-row">
+          {filterBtns.map(b => (
+            <button
+              key={b.key}
+              className="filter-btn"
+              onClick={() => { setFilter(b.key); setPage(1); }}
+              style={{ background: filter === b.key ? b.color : '#444', borderColor: b.color }}
+            >
+              {b.label}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -203,14 +224,14 @@ function ResearchSection({ research, allItems }: { research: Record<string, numb
         <>
           <div className="research-items">
             {pageItems.map((item) => (
-              <div key={item.id} className={`research-item ${item.done ? 'done' : 'missing'}`}>
+              <div key={item.id} className={`research-item ${item.status}`}>
                 <div className="item-info">
                   <span className="item-id">#{item.id}</span>
                   <span className="item-name">{item.name}</span>
                   <div className="item-bar">
                     <div
                       className="item-bar-fill"
-                      style={{ width: `${Math.min((item.current / item.needed) * 100, 100)}%` }}
+                      style={{ width: `${Math.min((item.current / Math.max(item.needed, 1)) * 100, 100)}%` }}
                     />
                   </div>
                 </div>
