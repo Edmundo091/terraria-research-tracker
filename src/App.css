@@ -78,7 +78,7 @@
 .item-image-wrapper { display: inline-block; margin: 0 auto; }
 .item-image-wrapper:hover .item-image { border-color: #3498db; transform: scale(1.05); transition: all 0.2s; }
 .item-image { width: 36px; height: 36px; border-radius: 4px; object-fit: contain; background: #333; border: 1px solid #555; display: block; }
-.item-name { font-size: 0.75rem; color: white; word-break: break-word; overflow-wrap: break-word; line-height: 1.15; text-align: center; }
+.item-name { font-size: 0.75rem; color: white; word-break: break-word; overflow-wrap: break-word; line-height: 1.15; text-align: center; margin-top: .2rem;}
 .item-bar { width: 90%; height: 4px; background: #444; border-radius: 2px; overflow: hidden; margin: 0.1rem auto 0; }
 .item-bar-fill { height: 100%; background: linear-gradient(90deg, #9b59b6, #3498db); transition: width 0.3s ease; }
 .item-count { font-size: 0.7rem; color: #3498db; font-weight: 600; text-align: center; display: block; }
