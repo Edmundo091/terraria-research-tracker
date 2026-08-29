@@ -232,12 +232,19 @@ function ResearchSection({ research, allItems }: { research: Record<string, numb
               <div key={item.id} className={`research-item ${item.status}`}>
                 <div className="item-info">
                   <span className="item-id">#{item.id}</span>
-                  <img
-                    src={imageUrl}
-                    alt={item.name}
-                    className="item-image" style={{width:48,height:48,padding:2,borderRadius:6,objectFit:"contain",background:"#333",border:"1px solid #555"}}
-                    onError={(e) => { const img = e.target as HTMLImageElement; img.style.background = "#555"; img.style.opacity = "0.5"; }}
-                  />
+                  <a
+                    className="item-link item-image-wrapper"
+                    href={`https://terraria.wiki.gg/wiki/${encodeURIComponent(item.name.replace(/ /g, '_'))}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src={`https://terraria.wiki.gg/images/${encodeURIComponent(item.name.replace(/ /g, '_'))}.png`}
+                      alt={item.name}
+                      className="item-image" style={{width:48,height:48,padding:2,borderRadius:6,objectFit:"contain",background:"#333",border:"1px solid #555"}}
+                      onError={(e) => { const img = e.target as HTMLImageElement; img.style.background = "#555"; img.style.opacity = "0.5"; }}
+                    />
+                  </a>
                   <span className="item-name">{item.name}</span>
                   <div className="item-bar">
                     <div

@@ -395,6 +395,12 @@
     width: 100%;
   }
 }
+.item-image-wrapper {
+  flex-shrink: 0;
+  display: inline-block;
+  line-height: 0;
+}
+
 .item-image {
   width: 48px;
   height: 48px;
@@ -410,4 +416,10 @@
   image-rendering: pixelated;
   display: block;
   padding: 2px;
+}
+
+.item-image-wrapper:hover .item-image {
+  border-color: #3498db;
+  transform: scale(1.05);
+  transition: all 0.2s;
 }
