@@ -124,16 +124,16 @@ function App() {
               </div>
               <div className="progress-stats">
                 <div className="stat">
-                  <span className="stat-value">{stats.complete.toLocaleString()}</span>
-                  <span className="stat-label">Researched</span>
-                </div>
-                <div className="stat">
                   <span className="stat-value">{stats.total.toLocaleString()}</span>
                   <span className="stat-label">Total Items</span>
                 </div>
                 <div className="stat">
                   <span className="stat-value">{stats.missing.toLocaleString()}</span>
                   <span className="stat-label">Missing</span>
+                </div>
+                <div className="stat">
+                  <span className="stat-value">{stats.complete.toLocaleString()}</span>
+                  <span className="stat-label">Researched</span>
                 </div>
               </div>
             </div>
