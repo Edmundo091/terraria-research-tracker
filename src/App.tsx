@@ -224,7 +224,7 @@ function ResearchSection({ research, allItems, stats, playerName }: { research: 
             />
           </div>
         </div>
-        <div className="filter-row" style={{ justifyContent: 'space-between', width: '100%' }}>
+        <div className="filter-row">
           <div className="filter-btn-group">
             {filterBtns.map(b => (
               <button
