@@ -72,7 +72,7 @@
   transition: all 0.2s;
 }
 .research-item:hover { border-color: #3498db; transform: translateY(-2px); }
-.research-item.missing { border-left: 1px solid #e74c3c; border-top-color: #e74c3c; background: #5a2424; }
+.research-item.missing { border-left: 1px solid #e74c3c; border-top-color: #e74c3c; background: rgba(232, 74, 74, 0.15); }
 .research-item.partial { border-left: 1px solid #f39c12; border-top-color: #f39c12; background: #2a2a1a; }
 .research-item.done { border-left: 1px solid #2ecc71; border-top-color: #2ecc71; opacity: 0.8; }
 
