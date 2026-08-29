@@ -30,10 +30,13 @@ function App() {
   }, [allItems, research]);
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-    setFileError('');
     setIsLoading(true);
+    const file = event.target.files?.[0];
+    if (!file) {
+      setIsLoading(false);
+      return
+    };
+    setFileError('');
     const reader = new FileReader();
     reader.onload = async (e) => {
       try {
