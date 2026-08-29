@@ -16,6 +16,7 @@ Inspired by [Terrasavr](https://yal.cc/) by **YellowAfterlife**.
 
 ## Credits
 - Inspired by [Terrasavr](https://yal.cc/) by **YellowAfterlife** — the `.plr` AES-128-CBC decryption logic and binary parsing approach were informed by his work.
+- Item images from [Terraria Wiki](https://terraria.wiki.gg/).
 
 ## Decryption Details
 - AES-128-CBC using key/IV: `6800330079005f006700550079005a00`
