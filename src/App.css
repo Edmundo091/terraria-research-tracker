@@ -106,4 +106,4 @@
 .btn-primary { background: linear-gradient(135deg, #e6b85c, #d95d39); }
 .btn-secondary { background: #444; }
 .btn-secondary:hover:not(:disabled) { background: #555; }
-.btn-success { background: #2ecc71; }
+.btn-success:hover:not(:disabled) { background: #27ae60; transform: translateY(-2px) scale(1.05); }
