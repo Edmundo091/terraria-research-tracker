@@ -259,12 +259,14 @@ function ResearchSection({ research, allItems, stats, playerName }: { research: 
                 <div className="item-info">
                   <span className="item-id">#{item.id}</span>
                   <span className="item-image-wrapper">
-                    <img
-                      src={item.imageUrl}
-                      alt={item.name}
-                      className="item-image"
-                      onError={(e) => { const img = e.target as HTMLImageElement; img.style.background = "#555"; img.style.opacity = "0.5"; }}
-                    />
+                    <a href={item.wikiUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block' }}>
+                      <img
+                        src={item.imageUrl}
+                        alt={item.name}
+                        className="item-image"
+                        onError={(e) => { const img = e.target as HTMLImageElement; img.style.background = "#555"; img.style.opacity = "0.5"; }}
+                      />
+                    </a>
                   </span>
                   <span className="item-name">{item.name}</span>
                   <div className="item-bar">
