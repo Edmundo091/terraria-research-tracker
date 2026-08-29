@@ -148,3 +148,11 @@
   transition: all 0.2s;
 }
 .per-page-select select:hover { border-color: #3498db; }
+
+.custom-select { position: relative; }
+.custom-select-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: #2a2a2a; color: white; border: 1px solid #555; border-radius: 6px; padding: 0.3rem 0.7rem; font-size: 0.85rem; cursor: pointer; min-width: 60px; justify-content: space-between; }
+.custom-select-btn:hover { border-color: #3498db; }
+.custom-select-arrow { font-size: 0.6rem; }
+.custom-select-menu { position: absolute; bottom: 100%; left: 0; background: #2a2a2a; border: 1px solid #555; border-radius: 6px; min-width: 100%; z-index: 100; margin-bottom: 0.3rem; overflow: hidden; }
+.custom-select-option { display: block; width: 100%; background: transparent; color: white; border: none; padding: 0.4rem 0.7rem; font-size: 0.85rem; cursor: pointer; text-align: left; }
+.custom-select-option:hover { background: #3498db; }

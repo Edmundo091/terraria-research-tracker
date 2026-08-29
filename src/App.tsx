@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { parsePlrFile, getResearchProgress } from './utils/plrParser';
 import { getAllItems } from './utils/itemsDb';
 import ConsolePanel from './components/ConsolePanel';
+import CustomSelect from './components/CustomSelect';
 import './App.css';
 
 function App() {
@@ -289,11 +290,7 @@ function ResearchSection({ research, allItems }: { research: Record<string, numb
 
           <div className="per-page-select">
             <label>Show:</label>
-            <select value={itemsPerPage} onChange={e => { setItemsPerPage(Number(e.target.value)); setPage(1); }}>
-              <option value={25}>25</option>
-              <option value={50}>50</option>
-              <option value={100}>100</option>
-            </select>
+            <CustomSelect value={itemsPerPage} onChange={v => { setItemsPerPage(v); setPage(1); }} options={[25, 50, 100]} />
           </div>
           <div className="pagination">
             <button className="page-btn" onClick={() => setPage(1)} disabled={page === 1}>««</button>
