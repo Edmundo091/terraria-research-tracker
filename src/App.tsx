@@ -132,12 +132,6 @@ function ResearchSection({ research, allItems, stats, playerName, setResearch }:
   const [filter, setFilter] = useState<'missing' | 'partial' | 'done' | 'unobtainable' | 'all'>('missing');
   const [page, setPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(50);
-        s.delete(item.id);
-        return s;
-      });
-    }, 400);
-  };
-
   const counts = useMemo(() => {
     let missing = 0, partial = 0, done = 0, unobtainable = 0;
     for (const item of allItems) {
@@ -288,18 +282,10 @@ function ResearchSection({ research, allItems, stats, playerName, setResearch }:
                       type="checkbox"
                       onChange={(e) => {
                         if (e.target.checked) {
-                          setMarkingDone?.(prev => new Set(prev).add(item.id));
-                          setTimeout(() => {
-                            const newResearch = { ...research };
-                            newResearch[item.internalName] = item.needed;
-                            setResearch?.(newResearch);
-                            updateItem(item.id, item.needed);
-                            setMarkingDone?.(prev => {
-                              const s = new Set(prev);
-                              s.delete(item.id);
-                              return s;
-                            });
-                          }, 400);
+                          const newResearch = { ...research };
+                          newResearch[item.internalName] = item.needed;
+                          setResearch?.(newResearch);
+                          updateItem(item.id, item.needed);
                         }
                       }}
                       style={{ accentColor: '#2ecc71' }}
