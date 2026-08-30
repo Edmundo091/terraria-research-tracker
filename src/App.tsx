@@ -10,7 +10,7 @@ import './App.css';
 function App() {
   const isDebug = window.location.search.includes('debug');
   const [playerName, setPlayerName] = useState<string>('');
-  const [research, setResearch] = useState<Record<string, number>>({});
+  const [research, setResearch] = useState<Record<string, number>>(() => { const saved = loadState(); return saved?.research ?? {}; });
   const [_, setProgress] = useState<number>(0); // kept for potential future
   const [fileError, setFileError] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
@@ -18,6 +18,22 @@ function App() {
   const allItems = useMemo(() => getAllItems(), []);
 
   const stats = useMemo(() => {
+    let researched = 0;
+    let complete = 0;
+    let partial = 0;
+    let missing = 0;
+    for (const item of allItems) {
+      if (item.needed === 0) continue;
+      const current = research[item.internalName] ?? 0;
+      if (current > 0) researched++;
+      if (current >= item.needed) complete++;
+      else if (current > 0) partial++;
+      else missing++;
+    }
+    const totalObtainable = allItems.filter(i => i.needed > 0).length;
+    const unobtainable = allItems.filter(i => i.needed === 0).length;
+    const totalProgress = (complete / Math.max(1, totalObtainable)) * 100;
+    return { researched, complete, partial, missing, total: totalObtainable, unobtainable, totalProgress };
   }, [allItems, research]);
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,6 +51,7 @@ function App() {
         const plrData = await parsePlrFile(arrayBuffer);
         setPlayerName(plrData.playerName);
         setResearch(plrData.research);
+        saveState({ playerName: plrData.playerName, research: plrData.research, version: plrData.version, lastUpdated: Date.now() });
         const { progressPercent } = getResearchProgress(plrData.research, plrData.items);
         setProgress(progressPercent);
       } catch (error: any) {
@@ -115,17 +132,6 @@ function ResearchSection({ research, allItems, stats, playerName, setResearch }:
   const [filter, setFilter] = useState<'missing' | 'partial' | 'done' | 'unobtainable' | 'all'>('missing');
   const [page, setPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(50);
-  const [markingDone, setMarkingDone] = useState(new Set<number>());
-
-  const handleMarkDone = (item: any) => {
-    setMarkingDone(prev => new Set(prev).add(item.id));
-    setTimeout(() => {
-      const newResearch = { ...research };
-      newResearch[item.internalName] = item.needed;
-      setResearch?.(newResearch);
-      updateItem(item.id, item.needed);
-      setMarkingDone(prev => {
-        const s = new Set(prev);
         s.delete(item.id);
         return s;
       });
