@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { flushSync } from 'react-dom';
 import { parsePlrFile, getResearchProgress } from './utils/plrParser';
 import { getAllItems } from './utils/itemsDb';
+import { loadState, saveState, updateItem } from './utils/localStorage';
 import ConsolePanel from './components/ConsolePanel';
 import CustomSelect from './components/CustomSelect';
 import './App.css';
@@ -17,22 +18,6 @@ function App() {
   const allItems = useMemo(() => getAllItems(), []);
 
   const stats = useMemo(() => {
-    let researched = 0;
-    let complete = 0;
-    let partial = 0;
-    let missing = 0;
-    for (const item of allItems) {
-      if (item.needed === 0) continue; // unobtainable
-      const current = research[item.internalName] ?? 0;
-      if (current > 0) researched++;
-      if (current >= item.needed) complete++;
-      else if (current > 0) partial++;
-      else missing++;
-    }
-    const totalObtainable = allItems.filter(i => i.needed > 0).length;
-    const unobtainable = allItems.filter(i => i.needed === 0).length;
-    const totalProgress = (complete / Math.max(1, totalObtainable)) * 100;
-    return { researched, complete, partial, missing, total: totalObtainable, unobtainable, totalProgress };
   }, [allItems, research]);
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -117,7 +102,7 @@ function App() {
 
       {playerName && (
         <div className="results-section">
-          <ResearchSection research={research} allItems={allItems} stats={stats} playerName={playerName} />
+          <ResearchSection research={research} allItems={allItems} stats={stats} playerName={playerName} setResearch={setResearch} />
         </div>
       )}
       {window.location.search.includes('debug') && <ConsolePanel />}
@@ -125,11 +110,27 @@ function App() {
   );
 }
 
-function ResearchSection({ research, allItems, stats, playerName }: { research: Record<string, number>; allItems: any[]; stats?: any; playerName?: string }) {
+function ResearchSection({ research, allItems, stats, playerName, setResearch }: { research: Record<string, number>; allItems: any[]; stats?: any; playerName?: string; setResearch?: (r: Record<string, number>) => void }) {
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<'missing' | 'partial' | 'done' | 'unobtainable' | 'all'>('missing');
   const [page, setPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(50);
+  const [markingDone, setMarkingDone] = useState(new Set<number>());
+
+  const handleMarkDone = (item: any) => {
+    setMarkingDone(prev => new Set(prev).add(item.id));
+    setTimeout(() => {
+      const newResearch = { ...research };
+      newResearch[item.internalName] = item.needed;
+      setResearch?.(newResearch);
+      updateItem(item.id, item.needed);
+      setMarkingDone(prev => {
+        const s = new Set(prev);
+        s.delete(item.id);
+        return s;
+      });
+    }, 400);
+  };
 
   const counts = useMemo(() => {
     let missing = 0, partial = 0, done = 0, unobtainable = 0;
@@ -258,16 +259,14 @@ function ResearchSection({ research, allItems, stats, playerName }: { research: 
               >
                 <div className="item-info">
                   <span className="item-id">#{item.id}</span>
-                  <span className="item-image-wrapper">
-                    <a href={item.wikiUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block' }}>
+                  <a href={item.wikiUrl} target="_blank" rel="noopener noreferrer" className="item-image-wrapper">
                       <img
                         src={item.imageUrl}
                         alt={item.name}
                         className="item-image"
                         onError={(e) => { const img = e.target as HTMLImageElement; img.style.background = "#555"; img.style.opacity = "0.5"; }}
                       />
-                    </a>
-                  </span>
+                  </a>
                   <span className="item-name">{item.name}</span>
                   <div className="item-bar">
                     <div
@@ -277,6 +276,31 @@ function ResearchSection({ research, allItems, stats, playerName }: { research: 
                   </div>
                 </div>
                 <span className="item-count">{item.current}/{item.needed}</span>
+                {item.status === 'missing' && (
+                  <label style={{ cursor: 'pointer', marginTop: '0.3rem', color: '#aaa', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                    <input
+                      type="checkbox"
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setMarkingDone?.(prev => new Set(prev).add(item.id));
+                          setTimeout(() => {
+                            const newResearch = { ...research };
+                            newResearch[item.internalName] = item.needed;
+                            setResearch?.(newResearch);
+                            updateItem(item.id, item.needed);
+                            setMarkingDone?.(prev => {
+                              const s = new Set(prev);
+                              s.delete(item.id);
+                              return s;
+                            });
+                          }, 400);
+                        }
+                      }}
+                      style={{ accentColor: '#2ecc71' }}
+                    />
+                    Mark Done
+                  </label>
+                )}
               </div>
               );
             })}
